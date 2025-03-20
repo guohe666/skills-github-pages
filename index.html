@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python题库</title>
+    <!-- 优化字体加载 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo" title="VAVA乐高机器人编程教育学员专用题库">
+                <span>Python题库</span>
+                <div class="tooltip">VAVA乐高机器人编程教育学员专用题库</div>
+            </div>
+            <div class="nav-links">
+                <a href="./assessment.html" target="_blank">测评入口</a>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>Python编程学习平台</h1>
+            <p>通过互动示例快速掌握Python基础知识</p>
+        </section>
+
+        <div class="card-container">
+            <div class="card" data-topic="basic-types">
+                <i class="fas fa-font fa-2x"></i>
+                <h3>文本与数值</h3>
+                <p>字符串操作和数值计算基础</p>
+                <div class="content">
+                    <h4>Python基础类型示例</h4>
+                    <pre><code class="python">
+# 1. 数值类型示例
+age = 25                    # 整数类型 (int)
+height = 1.75              # 浮点数类型 (float)
+price = 99.9               # 带小数点的价格
+
+# 2. 字符串类型示例
+name = "小明"               # 字符串类型 (str)
+message = '今天天气不错'     # 单引号或双引号都可以
+address = """
+北京市朝阳区
+建国路15号
+"""                        # 三引号支持多行字符串
+
+# 3. 类型转换示例
+num_str = "123"
+num = int(num_str)         # 字符串转整数
+height_str = str(height)   # 数值转字符串
+
+# 4. 字符串格式化
+info = f"{name}今年{age}岁，身高{height}米"
+print(info)                # 输出：小明今年25岁，身高1.75米
+
+# 5. 基本运算
+total = price * 2          # 数值计算
+change = 100 - price       # 减法运算
+print(f"总价: {total}元")
+print(f"找零: {change}元")
+                    </code></pre>
+                </div>
+            </div>
+            <div class="card" data-topic="io">
+                <i class="fas fa-terminal fa-2x"></i>
+                <h3>输入与输出</h3>
+                <p>print()和input()的使用技巧</p>
+                <div class="content">
+                    <h4>Python输入输出示例</h4>
+                    <pre><code class="python">
+# 1. 基本输出
+print("你好，Python!")      # 输出字符串
+print(666)                 # 输出数字
+
+# 2. 多个值输出
+print("苹果", "香蕉", "橙子")  # 使用逗号分隔，自动添加空格
+print("单价:", 5, "元")      # 混合输出文本和数字
+
+# 3. 基本输入
+name = input("请输入你的名字: ")   # 获取用户输入的文本
+print("你好,", name)             # 输出用户输入的内容
+
+# 4. 格式化输出
+price = 9.9
+count = 3
+print(f"单价：{price}元")        # f-string格式化输出
+print(f"数量：{count}个")        # 使用花括号插入变量
+print(f"总计：{price * count}元") # 可以包含简单计算
+
+# 5. 换行与空格
+print("第一行")                  # 自动换行
+print("第二行\n第三行")          # \n表示换行
+print("横向间隔", end=" | ")     # 修改结束符
+print("继续打印")                # 接着上一行打印
+                    </code></pre>
+                    
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+你好，Python!
+666
+苹果 香蕉 橙子
+单价: 5 元
+请输入你的名字: 小明
+你好, 小明
+单价：9.9元
+数量：3个
+总计：29.7元
+第一行
+第二行
+第三行
+横向间隔 | 继续打印
+                    </code></pre>
+                </div>
+            </div>
+            <div class="card" data-topic="variables">
+                <i class="fas fa-code fa-2x"></i>
+                <h3>变量与运算</h3>
+                <p>变量定义和基本运算</p>
+                <div class="content">
+                    <h4>Python变量与运算示例</h4>
+                    <pre><code class="python">
+# 1. 变量的基本使用
+score = 95               # 将95赋值给变量score
+name = "小华"            # 将字符串赋值给变量name
+print(score)            # 输出: 95
+print(name)             # 输出: 小华
+
+# 2. 变量的修改
+score = 98              # 修改变量的值
+print(score)            # 输出: 98
+
+# 3. 基本数学运算
+a = 10
+b = 3
+sum = a + b            # 加法
+diff = a - b           # 减法
+product = a * b        # 乘法
+quotient = a / b       # 除法（结果是浮点数）
+print(f"和: {sum}")     # 输出: 和: 13
+print(f"差: {diff}")    # 输出: 差: 7
+print(f"积: {product}") # 输出: 积: 30
+print(f"商: {quotient}") # 输出: 商: 3.3333...
+
+# 4. 变量之间的运算
+price = 5              # 单价
+count = 3              # 数量
+total = price * count  # 计算总价
+print(f"总价: {total}元") # 输出: 总价: 15元
+
+# 5. 简单的文本拼接
+first = "你好"
+second = "世界"
+message = first + second    # 字符串连接
+print(message)             # 输出: 你好世界
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+95
+小华
+98
+和: 13
+差: 7
+积: 30
+商: 3.3333333333333335
+总价: 15元
+你好世界
+                    </code></pre>
+                </div>
+            </div>
+            <div class="card" data-topic="control-flow">
+                <i class="fas fa-random fa-2x"></i>
+                <h3>流程控制</h3>
+                <p>条件语句和循环结构</p>
+                <div class="content">
+                    <h4>条件语句示例</h4>
+                    <pre><code class="python">
+# 1. 简单的if语句
+score = 85
+if score >= 60:
+    print("及格")    # 条件为True时执行
+
+# 2. if-else语句
+age = 16
+if age >= 18:
+    print("成年")
+else:
+    print("未成年")  # 条件为False时执行
+
+# 3. if-elif-else语句
+grade = 75
+if grade >= 90:
+    print("优秀")
+elif grade >= 80:
+    print("良好")
+elif grade >= 60:
+    print("及格")
+else:
+    print("不及格")
+
+# 4. 多重条件判断
+height = 1.75
+weight = 65
+if height > 1.7 and weight < 70:
+    print("体型标准")
+
+# 5. 简单的循环结构
+for i in range(3):      # 循环3次
+    print(f"第{i+1}次")
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+及格
+未成年
+及格
+体型标准
+第1次
+第2次
+第3次
+                    </code></pre>
+                </div>
+            </div>
+            <div class="card" data-topic="data-structures">
+                <i class="fas fa-list fa-2x"></i>
+                <h3>列表和字典</h3>
+                <p>Python基础数据结构使用</p>
+                <div class="content">
+                    <h4>列表和字典示例</h4>
+                    <pre><code class="python">
+# 1. 列表基础
+fruits = ["苹果", "香蕉", "橙子"]     # 创建列表
+print(fruits)                       # 输出整个列表
+print(fruits[0])                   # 输出第一个水果：苹果
+print(fruits[2])                   # 输出最后一个水果：橙子
+
+# 2. 列表的简单操作
+fruits.append("草莓")               # 添加新水果
+print(fruits)                      # 查看更新后的列表
+print(f"共有{len(fruits)}种水果")    # 获取列表长度
+
+# 3. 遍历列表
+print("水果清单：")
+for fruit in fruits:               # 使用for循环遍历列表
+    print(fruit)
+
+# 4. 字典基础
+student = {
+    "name": "小明",                # 键值对：姓名
+    "age": 12,                    # 键值对：年龄
+    "score": 95                   # 键值对：分数
+}
+
+# 5. 使用字典
+print(f"姓名：{student['name']}")   # 获取姓名
+print(f"年龄：{student['age']}岁")   # 获取年龄
+print(f"成绩：{student['score']}分") # 获取分数
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+['苹果', '香蕉', '橙子']
+苹果
+橙子
+['苹果', '香蕉', '橙子', '草莓']
+共有4种水果
+水果清单：
+苹果
+香蕉
+橙子
+草莓
+姓名：小明
+年龄：12岁
+成绩：95分
+                    </code></pre>
+                </div>
+            </div>
+            
+            <div class="card" data-topic="tuple-set">
+                <i class="fas fa-layer-group fa-2x"></i>
+                <h3>元组和集合</h3>
+                <p>不可变序列和无序集合的使用</p>
+                <div class="content">
+                    <h4>元组和集合示例</h4>
+                    <pre><code class="python">
+# 1. 元组的基本使用
+point = (3, 5)              # 创建元组
+print(point)                # 输出整个元组
+print(f"x坐标: {point[0]}")  # 访问元组元素
+print(f"y坐标: {point[1]}")
+
+# 2. 元组的不可变性
+rgb = (255, 128, 0)        # RGB颜色值
+print(f"红色: {rgb[0]}")    # 读取颜色分量
+print(f"绿色: {rgb[1]}")
+print(f"蓝色: {rgb[2]}")
+
+# 3. 集合的基本使用
+fruits = {"苹果", "香蕉", "橙子"}  # 创建集合
+print(fruits)                    # 输出集合
+
+# 4. 集合的特点
+numbers = {1, 2, 2, 3, 3, 4}    # 重复元素会被自动去除
+print(numbers)                  # 输出: {1, 2, 3, 4}
+
+# 5. 集合操作
+study_a = {"小明", "小红", "小华"}
+study_b = {"小明", "小李", "小张"}
+# 交集：同时在两个班的学生
+both = study_a & study_b
+print("同时在两个班级的学生:", both)
+# 并集：两个班级的所有学生
+all_students = study_a | study_b
+print("两个班级的所有学生:", all_students)
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+(3, 5)
+x坐标: 3
+y坐标: 5
+红色: 255
+绿色: 128
+蓝色: 0
+{'橙子', '苹果', '香蕉'}
+{1, 2, 3, 4}
+同时在两个班级的学生: {'小明'}
+两个班级的所有学生: {'小明', '小红', '小华', '小李', '小张'}
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="card" data-topic="common-operations">
+                <i class="fas fa-tools fa-2x"></i>
+                <h3>共有操作</h3>
+                <p>数据结构的通用操作方法</p>
+                <div class="content">
+                    <h4>Python共有操作示例</h4>
+                    <pre><code class="python">
+# 1. len() 函数使用
+numbers = [1, 2, 3, 4, 5]          # 列表
+print(f"列表长度: {len(numbers)}")   # 获取列表长度
+
+colors = ("红", "黄", "蓝")          # 元组
+print(f"元组长度: {len(colors)}")    # 获取元组长度
+
+fruits = {"苹果", "香蕉", "橙子"}     # 集合
+print(f"集合元素数: {len(fruits)}")   # 获取集合大小
+
+# 2. in 运算符
+print("香蕉" in fruits)              # 检查元素是否在集合中
+print(2 in numbers)                 # 检查元素是否在列表中
+print("绿" in colors)               # 检查元素是否在元组中
+
+# 3. 遍历操作
+print("\n列表遍历:")                 # 遍历列表
+for num in numbers:
+    print(num, end=" ")
+
+print("\n元组遍历:")                 # 遍历元组
+for color in colors:
+    print(color, end=" ")
+
+print("\n集合遍历:")                 # 遍历集合
+for fruit in fruits:
+    print(fruit, end=" ")
+
+# 4. 最大最小值
+scores = [85, 92, 78, 95, 88]
+print(f"\n\n最高分: {max(scores)}")  # 获取最大值
+print(f"最低分: {min(scores)}")      # 获取最小值
+
+# 5. 求和操作
+prices = [9.9, 15.5, 20.0, 8.8]
+total = sum(prices)                # 计算总和
+print(f"总价: {total}元")
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+列表长度: 5
+元组长度: 3
+集合元素数: 3
+True
+True
+False
+
+列表遍历:
+1 2 3 4 5 
+元组遍历:
+红 黄 蓝 
+集合遍历:
+苹果 香蕉 橙子 
+
+最高分: 95
+最低分: 78
+总价: 54.2元
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="card" data-topic="functions">
+                <i class="fas fa-cube fa-2x"></i>
+                <h3>函数定义</h3>
+                <p>自定义函数的创建和使用</p>
+                <div class="content">
+                    <h4>Python函数示例</h4>
+                    <pre><code class="python">
+# 1. 最简单的函数
+def say_hello():                # 定义无参数函数
+    print("你好，Python!")      # 函数体内的代码
+say_hello()                    # 调用函数
+
+# 2. 带参数的函数
+def greet(name):               # 定义带参数的函数
+    print(f"你好，{name}!")     # 使用参数
+greet("小明")                  # 传入参数调用
+
+# 3. 返回值函数
+def calculate_sum(a, b):       # 定义带返回值的函数
+    total = a + b             # 计算两数之和
+    return total              # 返回计算结果
+result = calculate_sum(5, 3)   # 保存返回值
+print(f"总和: {result}")       # 输出: 总和: 8
+
+# 4. 多个参数的函数
+def show_info(name, age):      # 定义多参数函数
+    message = f"{name}今年{age}岁"
+    print(message)
+show_info("小华", 12)          # 按顺序传入参数
+
+# 5. 带默认值的参数
+def make_coffee(type="拿铁"):   # 设置默认参数
+    print(f"制作一杯{type}咖啡")
+make_coffee()                  # 使用默认值
+make_coffee("美式")            # 传入自定义值
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+你好，Python!
+你好，小明!
+总和: 8
+小华今年12岁
+制作一杯拿铁咖啡
+制作一杯美式咖啡
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="card" data-topic="exceptions">
+                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                <h3>异常处理</h3>
+                <p>程序错误的捕获和处理</p>
+                <div class="content">
+                    <h4>Python异常处理示例</h4>
+                    <pre><code class="python">
+# 1. 基本的try-except结构
+try:
+    num = int("abc")          # 尝试将字符串转换为数字
+except ValueError:            # 捕获类型转换错误
+    print("无法将字符串转换为数字")
+
+# 2. 处理除零错误
+def divide(a, b):
+    try:
+        result = a / b        # 尝试除法运算
+        print(f"结果是: {result}")
+    except ZeroDivisionError:
+        print("错误：除数不能为零")
+
+divide(10, 2)                 # 正常运算
+divide(10, 0)                 # 触发除零错误
+
+# 3. 多个异常的处理
+def get_user_info(data):
+    try:
+        name = data["name"]   # 尝试访问字典
+        age = int(data["age"])
+        print(f"{name}今年{age}岁")
+    except KeyError:
+        print("错误：缺少必要的信息")
+    except ValueError:
+        print("错误：年龄必须是数字")
+
+# 测试不同情况
+get_user_info({"name": "小明", "age": "16"})     # 正常情况
+get_user_info({"name": "小华"})                  # 缺少age
+get_user_info({"name": "小红", "age": "abc"})    # 年龄格式错误
+
+# 4. 使用finally子句
+def open_file(filename):
+    try:
+        file = open(filename, "r", encoding="utf-8")
+        content = file.read()
+        return content
+    except FileNotFoundError:
+        print("错误：文件不存在")
+    finally:
+        print("操作完成")      # 无论是否出错都会执行
+
+# 测试文件操作
+open_file("test.txt")         # 尝试打开不存在的文件
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+无法将字符串转换为数字
+结果是: 5.0
+错误：除数不能为零
+小明今年16岁
+错误：缺少必要的信息
+错误：年龄必须是数字
+错误：文件不存在
+操作完成
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="card" data-topic="file-operations">
+                <i class="fas fa-file-alt fa-2x"></i>
+                <h3>文件操作</h3>
+                <p>文件的读写和基本处理</p>
+                <div class="content">
+                    <h4>Python文件操作示例</h4>
+                    <pre><code class="python">
+# 1. 写入文本文件
+def write_notes():
+    try:
+        with open("notes.txt", "w", encoding="utf-8") as file:
+            file.write("今天天气晴朗\n")          # 写入一行
+            file.write("适合出去散步")           # 写入另一行
+        print("笔记保存成功")
+    except Exception as e:
+        print(f"写入失败：{e}")
+
+# 2. 读取文本文件
+def read_notes():
+    try:
+        with open("notes.txt", "r", encoding="utf-8") as file:
+            content = file.read()                # 读取全部内容
+            print("文件内容：")
+            print(content)
+    except FileNotFoundError:
+        print("文件不存在")
+
+# 3. 逐行读取
+def read_lines():
+    try:
+        with open("notes.txt", "r", encoding="utf-8") as file:
+            print("逐行读取：")
+            for line in file:                    # 逐行处理
+                print(f"-> {line.strip()}")      # 去除换行符
+    except FileNotFoundError:
+        print("文件不存在")
+
+# 4. 追加内容
+def append_note(new_note):
+    try:
+        with open("notes.txt", "a", encoding="utf-8") as file:
+            file.write(f"\n{new_note}")         # 追加新内容
+        print("追加成功")
+    except Exception as e:
+        print(f"追加失败：{e}")
+
+# 测试文件操作
+write_notes()                                   # 创建并写入文件
+read_notes()                                    # 读取整个文件
+read_lines()                                    # 逐行读取
+append_note("晚上去看电影")                      # 追加内容
+read_notes()                                    # 再次读取
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+笔记保存成功
+文件内容：
+今天天气晴朗
+适合出去散步
+逐行读取：
+-> 今天天气晴朗
+-> 适合出去散步
+追加成功
+文件内容：
+今天天气晴朗
+适合出去散步
+晚上去看电影
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="card" data-topic="oop">
+                <i class="fas fa-project-diagram fa-2x"></i>
+                <h3>面向对象</h3>
+                <p>类和对象的基本使用</p>
+                <div class="content">
+                    <h4>Python面向对象示例</h4>
+                    <pre><code class="python">
+# 1. 定义简单的类
+class Student:
+    def __init__(self, name, age):      # 初始化方法
+        self.name = name                # 设置姓名
+        self.age = age                  # 设置年龄
+    
+    def introduce(self):                # 类的方法
+        print(f"大家好，我是{self.name}，今年{self.age}岁")
+
+# 创建学生对象
+student1 = Student("小明", 12)           # 创建对象
+student1.introduce()                    # 调用方法
+
+# 2. 带属性的类
+class Rectangle:
+    def __init__(self, width, height):
+        self.width = width              # 宽度属性
+        self.height = height            # 高度属性
+    
+    def calculate_area(self):           # 计算面积
+        return self.width * self.height
+    
+    def show_info(self):                # 显示信息
+        area = self.calculate_area()
+        print(f"矩形面积：{area}平方米")
+
+# 使用矩形类
+rect = Rectangle(5, 3)                  # 创建矩形对象
+rect.show_info()                       # 显示面积
+
+# 3. 继承示例
+class Animal:
+    def __init__(self, name):
+        self.name = name
+    
+    def speak(self):
+        pass                            # 基类方法
+
+class Dog(Animal):                      # 继承Animal类
+    def speak(self):                    # 重写speak方法
+        return f"{self.name}说：汪汪!"
+
+class Cat(Animal):                      # 继承Animal类
+    def speak(self):                    # 重写speak方法
+        return f"{self.name}说：喵喵!"
+
+# 使用继承类
+dog = Dog("小黑")
+cat = Cat("咪咪")
+print(dog.speak())                      # 调用狗的speak方法
+print(cat.speak())                      # 调用猫的speak方法
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+大家好，我是小明，今年12岁
+矩形面积：15平方米
+小黑说：汪汪!
+咪咪说：喵喵!
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="card" data-topic="modules">
+                <i class="fas fa-boxes fa-2x"></i>
+                <h3>模块和包</h3>
+                <p>代码复用和第三方库使用</p>
+                <div class="content">
+                    <h4>Python模块和包示例</h4>
+                    <pre><code class="python">
+# 1. 导入标准库模块
+import random                   # 导入随机数模块
+import math                     # 导入数学模块
+import time                     # 导入时间模块
+
+# 2. 使用随机数模块
+numbers = [1, 2, 3, 4, 5]
+print("随机选择：", random.choice(numbers))   # 随机选择一个数
+print("随机整数：", random.randint(1, 10))   # 生成1-10的随机数
+
+# 3. 使用数学模块
+radius = 5
+area = math.pi * radius ** 2              # 计算圆的面积
+print(f"圆的面积：{area:.2f}")            # 保留两位小数
+print(f"平方根：{math.sqrt(16)}")         # 计算平方根
+
+# 4. 使用时间模块
+print("当前时间：", time.strftime("%Y-%m-%d %H:%M:%S"))
+time.sleep(1)                             # 暂停1秒
+print("等待1秒后...")
+
+# 5. 从模块导入指定函数
+from random import randint, shuffle
+numbers = [1, 2, 3, 4, 5]
+shuffle(numbers)                          # 打乱列表顺序
+print("打乱后：", numbers)
+print("随机数：", randint(1, 6))           # 模拟骰子
+                    </code></pre>
+
+                    <h4>运行结果示例</h4>
+                    <pre><code class="output">
+随机选择： 3
+随机整数： 7
+圆的面积：78.54
+平方根：4.0
+当前时间： 2025-03-18 10:30:45
+等待1秒后...
+打乱后： [3, 1, 5, 2, 4]
+随机数： 4
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/scripts.js"></script>
+</body>
+</html>

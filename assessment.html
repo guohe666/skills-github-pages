@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python能力测评</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #A8A4FF;
+            --light: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .assessment-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .topic-selector {
+            margin-bottom: 2rem;
+        }
+
+        .select-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .multiselect {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #eee;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            background: white;
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+
+        .options-container {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .option {
+            padding: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .option:hover {
+            background-color: var(--light);
+        }
+
+        .option input[type="checkbox"] {
+            margin-right: 0.8rem;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .confirm-btn:hover {
+            background: #5849e6;
+        }
+
+        .selected-topics {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 0.5rem;
+            min-height: 3rem;
+        }
+
+        .selected-topic {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--secondary);
+            color: white;
+            border-radius: 1rem;
+            margin: 0.2rem;
+        }
+
+        .quiz-container {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .question {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+        }
+
+        .question-type {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .options {
+            margin-top: 1rem;
+        }
+
+        .option-item {
+            margin: 0.5rem 0;
+        }
+
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: block;
+        }
+
+        .result.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .result.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .result div {
+            margin: 0.3rem 0;
+        }
+
+        .result div:last-child {
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn {
+            margin-top: 2rem;
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .retry-btn, .back-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .retry-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .back-btn {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .retry-btn:hover {
+            background: #5849e6;
+        }
+
+        .back-btn:hover {
+            background: #dee2e6;
+        }
+
+        /* 进度条容器样式 */
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 80%;
+            width: 400px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .loading-text {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .loading-steps {
+            text-align: left;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .loading-step {
+            margin: 0.5rem 0;
+            color: #666;
+        }
+
+        .loading-step.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .loading-step.done {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="assessment-container">
+        <h1>Python能力测评</h1>
+        <div class="topic-selector">
+            <div class="select-container">
+                <button class="multiselect">选择测评知识点（可多选）</button>
+                <div class="options-container">
+                    <div class="option">
+                        <input type="checkbox" id="basic-types" value="basic-types">
+                        <label for="basic-types">文本与数值</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="io" value="io">
+                        <label for="io">输入与输出</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="variables" value="variables">
+                        <label for="variables">变量与运算</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="control-flow" value="control-flow">
+                        <label for="control-flow">流程控制</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="data-structures" value="data-structures">
+                        <label for="data-structures">列表和字典</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="tuple-set" value="tuple-set">
+                        <label for="tuple-set">元组和集合</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="common-operations" value="common-operations">
+                        <label for="common-operations">共有操作</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="functions" value="functions">
+                        <label for="functions">函数定义</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="exceptions" value="exceptions">
+                        <label for="exceptions">异常处理</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="file-operations" value="file-operations">
+                        <label for="file-operations">文件操作</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="oop" value="oop">
+                        <label for="oop">面向对象</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="modules" value="modules">
+                        <label for="modules">模块和包</label>
+                    </div>
+                </div>
+            </div>
+            <div class="selected-topics">
+                已选择的知识点将显示在这里
+            </div>
+        </div>
+        <button class="confirm-btn">开始测评</button>
+    </div>
+
+    <div class="loading-container">
+        <div class="loading-content">
+            <div class="loading-text">正在生成题目</div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <div class="loading-steps">
+                <div class="loading-step" data-step="1">1. 准备知识点数据</div>
+                <div class="loading-step" data-step="2">2. 连接AI服务</div>
+                <div class="loading-step" data-step="3">3. 生成题目中</div>
+                <div class="loading-step" data-step="4">4. 处理题目格式</div>
+                <div class="loading-step" data-step="5">5. 完成题目生成</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 将 options 变量移到全局作用域
+        let options; // 声明全局变量
+
+        // 修改 API 配置
+        const API_CONFIG = {
+            url: 'https://api.guijitech.com/v1/chat/completions',  // 更新的 API 端点
+            apiKey: 'sk-sqdvsvvwxedqmzbvsjsjztidosnoytcwnxisotuqidgmenod'  // 请替换为有效的 API 密钥
+        };
+
+        // 获取访问令牌
+        async function getAccessToken() {
+            const response = await fetch(`https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${API_CONFIG.apiKey}&client_secret=${API_CONFIG.secretKey}`);
+            const data = await response.json();
+            return data.access_token;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const multiselect = document.querySelector('.multiselect');
+            const optionsContainer = document.querySelector('.options-container');
+            options = document.querySelectorAll('.option input'); // 初始化全局变量
+            const selectedTopics = document.querySelector('.selected-topics');
+            const confirmBtn = document.querySelector('.confirm-btn');
+
+            // 修改下拉菜单点击事件
+            multiselect.addEventListener('click', (e) => {
+                e.stopPropagation(); // 阻止事件冒泡
+                const currentDisplay = optionsContainer.style.display;
+                optionsContainer.style.display = currentDisplay === 'block' ? 'none' : 'block';
+            });
+
+            // 修改选项点击事件
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    const checkbox = option.querySelector('input[type="checkbox"]');
+                    if (e.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    updateSelectedTopics();
+                });
+            });
+
+            // 点击外部区域关闭下拉菜单
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.select-container')) {
+                    optionsContainer.style.display = 'none';
+                }
+            });
+
+            // 更新选择的知识点显示
+            function updateSelectedTopics() {
+                const selected = Array.from(options)
+                    .filter(option => option.checked)
+                    .map(option => option.nextElementSibling.textContent);
+
+                selectedTopics.innerHTML = selected.length > 0 
+                    ? selected.map(topic => `<span class="selected-topic">${topic}</span>`).join('')
+                    : '已选择的知识点将显示在这里';
+            }
+
+            // 监听选项变化
+            options.forEach(option => {
+                option.addEventListener('change', updateSelectedTopics);
+            });
+
+            // 确认按钮点击事件
+            confirmBtn.addEventListener('click', async () => {
+                const selected = Array.from(options)
+                    .filter(option => option.checked)
+                    .map(option => option.value);
+
+                if (selected.length === 0) {
+                    alert('请至少选择一个知识点');
+                    return;
+                }
+
+                // 显示加载提示
+                confirmBtn.textContent = '正在生成题目...';
+                confirmBtn.disabled = true;
+
+                try {
+                    // 异步生成题目
+                    const questions = await generateQuestions(selected);
+                    const quizContainer = renderQuestions(questions);
+                    
+                    // 隐藏选择器，显示题目
+                    document.querySelector('.topic-selector').style.display = 'none';
+                    confirmBtn.style.display = 'none';
+                    
+                    // 移除之前的题目容器
+                    const oldQuizContainer = document.querySelector('.quiz-container');
+                    if (oldQuizContainer) {
+                        oldQuizContainer.remove();
+                    }
+                    
+                    // 添加新的题目容器
+                    document.querySelector('.assessment-container').appendChild(quizContainer);
+                    quizContainer.style.display = 'block';
+                } catch (error) {
+                    console.error('生成题目失败:', error);
+                    alert('生成题目失败，请重试');
+                    confirmBtn.textContent = '开始测评';
+                    confirmBtn.disabled = false;
+                }
+            });
+        });
+
+        // 建立本地题库
+        const questionBank = {
+            'basic-types': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "在Python中，字符串可以用单引号或双引号括起来",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "Python中的整数类型int没有大小限制",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "Python中的浮点数可以用科学计数法表示",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "在Python中，字符串是不可变的",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "Python中的字符串可以通过加号(+)进行拼接",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "Python中的字符串不能使用乘法运算",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "Python中的浮点数计算总是精确的",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "在Python中可以直接比较不同类型的数值，如整数和浮点数",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "Python中的f-string格式化是Python3.6后引入的新特性",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "文本与数值",
+                        question: "Python中的布尔值True可以参与数值运算，等价于1",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "以下哪个是Python中的正确字符串表示方式？",
+                        options: ["'Hello'", "$Hello$", "<Hello>", "?Hello?"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "在Python中，哪个函数可以将字符串转换为整数？",
+                        options: ["int()", "string()", "number()", "integer()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "以下哪个是Python中的复数表示方式？",
+                        options: ["3+4j", "3+4i", "3^4", "(3,4)"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "Python中字符串的切片操作，步长为-1表示什么？",
+                        options: ["从右向左取字符", "从左向右取字符", "不取任何字符", "报错"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "以下哪个不是Python中的基本数据类型？",
+                        options: ["array", "float", "int", "bool"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "在Python中，如何获取字符串的长度？",
+                        options: ["len(str)", "str.length", "str.size()", "count(str)"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "以下哪个是正确的浮点数科学计数法表示？",
+                        options: ["1.23e-4", "1.23p-4", "1.23*10^-4", "1.23E"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "在Python中，如何将浮点数转换为整数？",
+                        options: ["int(1.9)", "round(1.9)", "floor(1.9)", "convert(1.9)"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "以下哪种方式不能创建空字符串？",
+                        options: ["str()", "''", '""', "String()"],
+                        answer: 3
+                    },
+                    {
+                        type: "choice",
+                        topic: "文本与数值",
+                        question: "Python中的字符串索引从什么数字开始？",
+                        options: ["0", "1", "-1", "任意数字"],
+                        answer: 0
+                    }
+                ]
+            },
+            'io': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "输入与输出",
+                        question: "print()函数默认会在输出末尾添加换行符",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "输入与输出",
+                        question: "input()函数总是返回字符串类型的数据",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "输入与输出",
+                        question: "print()函数可以接收多个参数进行输出",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "输入与输出",
+                        question: "print()函数的end参数默认值是换行符\\n",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "输入与输出",
+                        question: "print()函数的sep参数用于指定多个输出值之间的分隔符",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "输入与输出",
+                        question: "input()函数可以不带提示信息参数",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "输入与输出",
+                        question: "Python中用于获取用户输入的函数是？",
+                        options: ["input()", "read()", "get()", "scanf()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "输入与输出",
+                        question: "要在print()函数输出时不换行，应该设置哪个参数？",
+                        options: ["end=''", "sep=''", "newline=False", "line=False"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "输入与输出",
+                        question: "以下哪个不是print()函数的参数？",
+                        options: ["format", "sep", "end", "file"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "输入与输出",
+                        question: "如何获取用户输入的整数？",
+                        options: ["int(input())", "input(int)", "integer(input())", "input().toInt()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "输入与输出",
+                        question: "print()函数默认的分隔符是什么？",
+                        options: [" ", ",", "|", "无分隔符"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "输入与输出",
+                        question: "以下哪种方式可以在一行中打印多个值？",
+                        options: [
+                            "print(a, b, c)",
+                            "print(a + b + c)",
+                            "print([a, b, c])",
+                            "print(a); print(b); print(c)"
+                        ],
+                        answer: 0
+                    }
+                ]
+            },
+            'variables': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "变量与运算",
+                        question: "Python中的变量不需要声明类型就可以直接使用",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "变量与运算",
+                        question: "Python中的变量名可以以数字开头",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "变量与运算",
+                        question: "Python中的变量名区分大小写",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "变量与运算",
+                        question: "Python中可以用del语句删除变量",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "变量与运算",
+                        question: "Python中的复合赋值运算符+=的优先级高于=",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "变量与运算",
+                        question: "Python中的除法运算/总是返回浮点数",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "变量与运算",
+                        question: "Python中的变量可以同时赋值给多个不同的值",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "变量与运算",
+                        question: "Python中的变量都是对数据的引用",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "变量与运算",
+                        question: "以下哪个不是Python中合法的变量名？",
+                        options: ["123abc", "_test", "test_1", "TestName"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "变量与运算",
+                        question: "Python中的整数除法运算符是什么？",
+                        options: ["//", "/", "%", "div"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "变量与运算",
+                        question: "以下哪个是Python中的赋值运算符？",
+                        options: ["=", "==", "===", "->"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "变量与运算",
+                        question: "Python中，x += 1 等价于？",
+                        options: ["x = x + 1", "x = 1 + x", "x + 1", "1 + x"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "变量与运算",
+                        question: "在Python中，3 ** 2的结果是多少？",
+                        options: ["9", "6", "8", "4"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "变量与运算",
+                        question: "以下哪个不是Python中的比较运算符？",
+                        options: ["===", "<", ">", ">="],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "变量与运算",
+                        question: "Python中，如何交换两个变量的值？",
+                        options: ["a, b = b, a", "swap(a, b)", "exchange(a, b)", "a <-> b"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "变量与运算",
+                        question: "以下哪个运算符的优先级最高？",
+                        options: ["**", "*", "+", "="],
+                        answer: 0
+                    }
+                ]
+            },
+            'control-flow': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "流程控制",
+                        question: "Python中的if语句可以没有else子句",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "流程控制",
+                        question: "Python中的while循环必须有else子句",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "流程控制",
+                        question: "break语句可以跳出多层循环",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "流程控制",
+                        question: "continue语句会直接结束整个循环",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "流程控制",
+                        question: "Python中可以使用elif代替else if",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "流程控制",
+                        question: "for循环可以遍历字符串中的每个字符",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "流程控制",
+                        question: "range()函数可以生成递减的数字序列",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "流程控制",
+                        question: "Python中的pass语句什么都不做，只是占位",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "流程控制",
+                        question: "range(1, 5)会生成哪些数字？",
+                        options: ["1,2,3,4", "1,2,3,4,5", "0,1,2,3,4", "2,3,4,5"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "流程控制",
+                        question: "以下哪个不是Python中的循环语句？",
+                        options: ["do-while", "while", "for", "for-in"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "流程控制",
+                        question: "在循环中使用continue语句会发生什么？",
+                        options: [
+                            "跳过当前循环的剩余语句",
+                            "结束整个循环",
+                            "退出程序",
+                            "报错"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "流程控制",
+                        question: "以下哪个是正确的if语句格式？",
+                        options: [
+                            "if x > 0:",
+                            "if (x > 0)",
+                            "if x > 0 then",
+                            "if x > 0 endif"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "流程控制",
+                        question: "range(10, 0, -2)会生成什么序列？",
+                        options: [
+                            "10,8,6,4,2",
+                            "10,9,8,7,6,5,4,3,2,1",
+                            "0,2,4,6,8,10",
+                            "9,7,5,3,1"
+                        ],
+                        answer: 0
+                    }
+                ]
+            },
+            'data-structures': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "列表和字典",
+                        question: "Python中的列表是可变的数据类型",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "列表和字典",
+                        question: "字典的键(key)必须是不可变类型",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "列表可以包含不同类型的元素",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "列表和字典",
+                        question: "字典是无序的数据结构",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "列表和字典",
+                        question: "列表的append()方法可以一次添加多个元素",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "列表和字典",
+                        question: "字典可以使用列表作为键",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "列表和字典",
+                        question: "列表的切片操作会创建一个新的列表副本",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "列表和字典",
+                        question: "字典的values()方法返回的是列表类型",
+                        answer: false
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "列表和字典",
+                        question: "以下哪个方法用于向列表末尾添加元素？",
+                        options: ["append()", "add()", "insert()", "extend()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "列表和字典",
+                        question: "如何获取字典中不存在的键对应的值而不报错？",
+                        options: ["dict.get(key)", "dict[key]", "dict.value(key)", "dict.fetch(key)"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "列表和字典",
+                        question: "删除列表中的最后一个元素使用哪个方法？",
+                        options: ["pop()", "remove()", "delete()", "del()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "列表和字典",
+                        question: "以下哪个操作会清空字典中的所有内容？",
+                        options: ["dict.clear()", "dict.remove()", "dict.delete()", "dict.empty()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "列表和字典",
+                        question: "列表的sort()方法的reverse参数设为True时会怎样？",
+                        options: ["降序排序", "升序排序", "随机排序", "保持原序"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "列表和字典",
+                        question: "如何判断某个键是否在字典中？",
+                        options: ["key in dict", "dict.has(key)", "dict.contains(key)", "dict.exists(key)"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "列表和字典",
+                        question: "列表的extend()方法和append()方法的区别是什么？",
+                        options: [
+                            "extend添加可迭代对象的所有元素，append添加单个元素",
+                            "extend只能添加一个元素，append可以添加多个元素",
+                            "extend添加数字，append添加字符串",
+                            "它们功能完全相同"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "列表和字典",
+                        question: "在字典中，如果键不存在，dict.get(key)方法默认返回什么？",
+                        options: ["None", "False", "0", "空字符串"],
+                        answer: 0
+                    }
+                ]
+            },
+            'tuple-set': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "元组和集合",
+                        question: "Python中的元组是不可变的数据类型",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "元组和集合",
+                        question: "集合中的元素是无序的",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "元组和集合",
+                        question: "集合可以包含重复的元素",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "元组和集合",
+                        question: "元组可以作为字典的键",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "元组和集合",
+                        question: "空元组的长度是0",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "元组和集合",
+                        question: "集合支持索引访问元素",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "元组和集合",
+                        question: "只包含一个元素的元组必须在元素后面加逗号",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "元组和集合",
+                        question: "集合的update()方法可以一次添加多个元素",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "元组和集合",
+                        question: "如何创建只包含一个元素的元组？",
+                        options: ["(1,)", "(1)", "tuple(1)", "single(1)"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "元组和集合",
+                        question: "以下哪个方法用于向集合添加单个元素？",
+                        options: ["add()", "append()", "insert()", "push()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "元组和集合",
+                        question: "集合之间的交集运算使用什么运算符？",
+                        options: ["&", "|", "-", "+"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "元组和集合",
+                        question: "如何将列表转换为集合？",
+                        options: ["set()", "toSet()", "SetFromList()", "makeSet()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "元组和集合",
+                        question: "以下哪种方式可以创建空集合？",
+                        options: ["set()", "{}", "set{}", "new set()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "元组和集合",
+                        question: "元组解包时，如何处理多余的元素？",
+                        options: ["*变量名", "...变量名", "vars", "extra"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "元组和集合",
+                        question: "集合的remove()方法和discard()方法的区别是什么？",
+                        options: [
+                            "元素不存在时remove报错而discard不报错",
+                            "remove删除一个元素而discard删除多个元素",
+                            "它们功能完全相同",
+                            "discard报错而remove不报错"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "元组和集合",
+                        question: "以下哪个不是集合的内置方法？",
+                        options: ["sort()", "update()", "remove()", "clear()"],
+                        answer: 0
+                    }
+                ]
+            },
+            'functions': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "函数定义",
+                        question: "Python中的函数必须有返回值",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "函数定义",
+                        question: "Python中的函数可以嵌套定义",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "函数定义",
+                        question: "lambda函数只能有一个表达式",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "函数定义",
+                        question: "*args参数可以接收任意数量的关键字参数",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "函数定义",
+                        question: "函数的参数传递是值传递",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "函数定义",
+                        question: "函数内部可以修改全局变量的值",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "函数定义",
+                        question: "以下哪个是正确的函数定义方式？",
+                        options: ["def func():", "function func():", "func():", "def func"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "函数定义",
+                        question: "在函数中使用全局变量需要使用哪个关键字？",
+                        options: ["global", "nonlocal", "public", "extern"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "函数定义",
+                        question: "以下哪个不是Python函数的参数类型？",
+                        options: ["默认参数", "位置参数", "关键字参数", "静态参数"],
+                        answer: 3
+                    },
+                    {
+                        type: "choice",
+                        topic: "函数定义",
+                        question: "以下哪个是lambda函数的正确语法？",
+                        options: [
+                            "lambda x: x * 2",
+                            "lambda: x * 2 = x",
+                            "def lambda x: x * 2",
+                            "lambda x => x * 2"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "函数定义",
+                        question: "如何在函数中接收任意数量的位置参数？",
+                        options: ["*args", "**kwargs", "&args", "...args"],
+                        answer: 0
+                    }
+                ]
+            },
+            'exceptions': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "异常处理",
+                        question: "Python中可以在一个try块中捕获多种异常",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "异常处理",
+                        question: "finally语句块总是会执行",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "异常处理",
+                        question: "可以在except后不指定具体的异常类型",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "异常处理",
+                        question: "raise语句只能抛出内置异常",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "异常处理",
+                        question: "异常可以嵌套处理",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "异常处理",
+                        question: "else语句块在没有异常发生时执行",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "异常处理",
+                        question: "以下哪个不是Python的内置异常？",
+                        options: ["ErrorException", "ValueError", "TypeError", "IndexError"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "异常处理",
+                        question: "如何自定义异常类？",
+                        options: [
+                            "继承Exception类",
+                            "使用@exception装饰器",
+                            "使用raise关键字",
+                            "定义普通类"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "异常处理",
+                        question: "在什么情况下会引发IndexError？",
+                        options: [
+                            "访问列表越界",
+                            "类型转换失败",
+                            "除数为零",
+                            "键不存在"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "异常处理",
+                        question: "以下哪个语句用于主动抛出异常？",
+                        options: ["raise", "throw", "except", "catch"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "异常处理",
+                        question: "try语句必须搭配以下哪个语句？",
+                        options: ["except或finally", "catch", "throw", "raise"],
+                        answer: 0
+                    }
+                ]
+            },
+            'modules': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "模块和包",
+                        question: "Python中的模块就是一个.py文件",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "模块和包",
+                        question: "包必须包含__init__.py文件",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "模块和包",
+                        question: "from module import *会导入所有内容",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "模块和包",
+                        question: "模块只会被导入一次",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "模块和包",
+                        question: "reload()函数可以重新加载模块",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "模块和包",
+                        question: "如何给导入的模块起别名？",
+                        options: [
+                            "import module as alias",
+                            "from module import as alias",
+                            "import alias from module",
+                            "module as alias"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "模块和包",
+                        question: "以下哪个不是Python的标准库？",
+                        options: ["numpy", "os", "sys", "random"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "模块和包",
+                        question: "如何安装第三方包？",
+                        options: [
+                            "pip install package",
+                            "python install package",
+                            "import package",
+                            "download package"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "模块和包",
+                        question: "模块的搜索路径存储在哪个变量中？",
+                        options: ["sys.path", "os.path", "python.path", "module.path"],
+                        answer: 0
+                    }
+                ]
+            },
+            'common-operations': {
+                judgement: [
+                    {
+                        type: "judgement",
+                        topic: "共有操作",
+                        question: "Python中len()函数可以用于字符串、列表、元组、字典和集合",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "共有操作",
+                        question: "in运算符可以用于判断元素是否在序列或集合中",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "共有操作",
+                        question: "max()和min()函数可以用于任何可迭代对象",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "共有操作",
+                        question: "sorted()函数只能对列表进行排序",
+                        answer: false
+                    },
+                    {
+                        type: "judgement",
+                        topic: "共有操作",
+                        question: "enumerate()函数可以同时获取索引和元素值",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "共有操作",
+                        question: "zip()函数可以将多个可迭代对象打包成元组",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "共有操作",
+                        question: "all()函数要求可迭代对象中所有元素都为True才返回True",
+                        answer: true
+                    },
+                    {
+                        type: "judgement",
+                        topic: "共有操作",
+                        question: "any()函数只要可迭代对象中有一个元素为True就返回True",
+                        answer: true
+                    }
+                ],
+                choice: [
+                    {
+                        type: "choice",
+                        topic: "共有操作",
+                        question: "以下哪个函数用于过滤可迭代对象中的元素？",
+                        options: ["filter()", "select()", "where()", "choose()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "共有操作",
+                        question: "map()函数的作用是什么？",
+                        options: [
+                            "对可迭代对象中的每个元素应用函数",
+                            "创建字典",
+                            "查找元素位置",
+                            "对元素排序"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "共有操作",
+                        question: "sum()函数可以对什么类型的数据进行求和？",
+                        options: [
+                            "任何可迭代的数字序列",
+                            "只能是列表",
+                            "只能是元组",
+                            "任何数据类型"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "共有操作",
+                        question: "sorted()函数的reverse参数的作用是什么？",
+                        options: [
+                            "控制是否降序排序",
+                            "控制是否原地排序",
+                            "控制是否允许重复",
+                            "控制是否保留原顺序"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "共有操作",
+                        question: "以下哪个不是Python的内置转换函数？",
+                        options: ["convert()", "str()", "list()", "tuple()"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "共有操作",
+                        question: "enumerate()函数的start参数有什么作用？",
+                        options: [
+                            "设置起始索引值",
+                            "设置结束位置",
+                            "设置步长",
+                            "设置元素类型"
+                        ],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "共有操作",
+                        question: "reduce()函数在Python 3中位于哪个模块？",
+                        options: ["functools", "itertools", "operator", "collections"],
+                        answer: 0
+                    },
+                    {
+                        type: "choice",
+                        topic: "共有操作",
+                        question: "list()函数可以将哪些类型转换为列表？",
+                        options: [
+                            "任何可迭代对象",
+                            "只能转换元组",
+                            "只能转换字符串",
+                            "只能转换集合"
+                        ],
+                        answer: 0
+                    }
+                ]
+            }
+        };
+
+        // 更新面向对象的题库
+        questionBank['oop'] = {
+            judgement: [
+                ...questionBank['oop'].judgement,
+                {
+                    type: "judgement",
+                    topic: "面向对象",
+                    question: "在Python中，所有的类方法第一个参数必须是cls",
+                    answer: true
+                },
+                {
+                    type: "judgement",
+                    topic: "面向对象",
+                    question: "__new__方法在__init__方法之前被调用",
+                    answer: true
+                },
+                {
+                    type: "judgement",
+                    topic: "面向对象",
+                    question: "抽象类可以被直接实例化",
+                    answer: false
+                },
+                {
+                    type: "judgement",
+                    topic: "面向对象",
+                    question: "使用super()可以调用父类的方法",
+                    answer: true
+                }
+            ],
+            choice: [
+                ...questionBank['oop'].choice,
+                {
+                    type: "choice",
+                    topic: "面向对象",
+                    question: "在Python中定义私有属性的命名规则是什么？",
+                    options: [
+                        "以双下划线__开头",
+                        "以单下划线_开头",
+                        "以$开头",
+                        "以private关键字修饰"
+                    ],
+                    answer: 0
+                },
+                {
+                    type: "choice",
+                    topic: "面向对象",
+                    question: "以下哪个装饰器用于定义类方法？",
+                    options: [
+                        "@classmethod",
+                        "@staticmethod",
+                        "@method",
+                        "@classdef"
+                    ],
+                        answer: 0
+                },
+                {
+                    type: "choice",
+                    topic: "面向对象",
+                    question: "多重继承中，方法解析顺序(MRO)采用什么算法？",
+                    options: [
+                        "C3算法",
+                        "深度优先",
+                        "广度优先",
+                        "随机顺序"
+                    ],
+                    answer: 0
+                }
+            ]
+        };
+
+        // 更新文件操作的题库
+        questionBank['file-operations'] = {
+            judgement: [
+                ...questionBank['file-operations'].judgement,
+                {
+                    type: "judgement",
+                    topic: "文件操作",
+                    question: "使用with语句打开文件会自动关闭文件",
+                    answer: true
+                },
+                {
+                    type: "judgement",
+                    topic: "文件操作",
+                    question: "'rb'模式打开文件时读取的是字节数据",
+                    answer: true
+                },
+                {
+                    type: "judgement",
+                    topic: "文件操作",
+                    question: "seek()方法可以移动文件指针位置",
+                    answer: true
+                },
+                {
+                    type: "judgement",
+                    topic: "文件操作",
+                    question: "readlines()方法返回一个生成器对象",
+                    answer: false
+                }
+            ],
+            choice: [
+                ...questionBank['file-operations'].choice,
+                {
+                    type: "choice",
+                    topic: "文件操作",
+                    question: "以下哪个不是文件打开模式？",
+                    options: [
+                        "x+",
+                        "w+",
+                        "r+",
+                        "a+"
+                    ],
+                    answer: 0
+                },
+                {
+                    type: "choice",
+                    topic: "文件操作",
+                    question: "write()方法写入文件后，何时数据才真正写入磁盘？",
+                    options: [
+                        "调用flush()或close()后",
+                        "write()调用后立即写入",
+                        "程序结束时",
+                        "操作系统决定"
+                    ],
+                    answer: 0
+                },
+                {
+                    type: "choice",
+                    topic: "文件操作",
+                    question: "以下哪个方法最适合读取大文件？",
+                    options: [
+                        "for line in file",
+                        "file.read()",
+                        "file.readlines()",
+                        "file.readline()"
+                    ],
+                    answer: 0
+                },
+                {
+                    type: "choice",
+                    topic: "文件操作",
+                    question: "tell()方法的作用是什么？",
+                    options: [
+                        "返回当前文件指针位置",
+                        "显示文件内容",
+                        "检查文件是否存在",
+                        "获取文件大小"
+                    ],
+                    answer: 0
+                }
+            ]
+        };
+
+        // 添加正则表达式知识点
+        questionBank['regex'] = {
+            judgement: [
+                {
+                    type: "judgement",
+                    topic: "正则表达式",
+                    question: "Python中的原始字符串以r开头",
+                    answer: true
+                },
+                {
+                    type: "judgement",
+                    topic: "正则表达式",
+                    question: ".*匹配任意字符零次或多次",
+                    answer: true
+                },
+                {
+                    type: "judgement",
+                    topic: "正则表达式",
+                    question: "\\d等价于[0-9]",
+                    answer: true
+                },
+                {
+                    type: "judgement",
+                    topic: "正则表达式",
+                    question: "match()方法只匹配字符串开头",
+                    answer: true
+                }
+            ],
+            choice: [
+                {
+                    type: "choice",
+                    topic: "正则表达式",
+                    question: "以下哪个不是re模块的方法？",
+                    options: [
+                        "regex()",
+                        "match()",
+                        "search()",
+                        "findall()"
+                    ],
+                    answer: 0
+                },
+                {
+                    type: "choice",
+                    topic: "正则表达式",
+                    question: "正则表达式中，{n,m}表示什么？",
+                    options: [
+                        "重复n到m次",
+                        "匹配n或m",
+                        "范围n到m",
+                        "索引n到m"
+                    ],
+                    answer: 0
+                },
+                {
+                    type: "choice",
+                    topic: "正则表达式",
+                    question: "哪个标志可以让.匹配换行符？",
+                    options: [
+                        "re.DOTALL",
+                        "re.MULTILINE",
+                        "re.IGNORECASE",
+                        "re.ASCII"
+                    ],
+                    answer: 0
+                }
+            ]
+        };
+
+        // 随机打乱数组的函数
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 添加进度控制函数
+        function updateProgress(step, total = 5) {
+            const progress = document.querySelector('.progress');
+            const percentage = (step / total) * 100;
+            progress.style.width = `${percentage}%`;
+
+            // 更新步骤显示
+            document.querySelectorAll('.loading-step').forEach((stepEl, index) => {
+                if (index + 1 < step) {
+                    stepEl.classList.add('done');
+                    stepEl.classList.remove('active');
+                } else if (index + 1 === step) {
+                    stepEl.classList.add('active');
+                    stepEl.classList.remove('done');
+                } else {
+                    stepEl.classList.remove('active', 'done');
+                }
+            });
+        }
+
+        // 显示/隐藏加载界面
+        function toggleLoading(show) {
+            const loadingContainer = document.querySelector('.loading-container');
+            loadingContainer.style.display = show ? 'flex' : 'none';
+            if (show) {
+                updateProgress(1);
+            }
+        }
+
+        // 修改生成题目函数
+        function generateQuestions(topics) {
+            try {
+                toggleLoading(true);
+                updateProgress(1); // 准备知识点数据
+                
+                setTimeout(() => updateProgress(2), 500); // 准备生成题目
+                setTimeout(() => updateProgress(3), 1000); // 生成题目中
+                setTimeout(() => updateProgress(4), 1500); // 处理题目格式
+                
+                // 从每个选中的知识点中随机抽取题目
+                let selectedQuestions = topics.flatMap(topic => {
+                    const topicQuestions = questionBank[topic];
+                    if (!topicQuestions) return [];
+
+                    // 从判断题中随机抽取2道题
+                    const judgements = shuffleArray([...topicQuestions.judgement])
+                        .slice(0, 2);
+
+                    // 从选择题中随机抽取2道题
+                    const choices = shuffleArray([...topicQuestions.choice])
+                        .slice(0, 2);
+
+                    return [...judgements, ...choices];
+                });
+
+                // 打乱所有题目的顺序
+                selectedQuestions = shuffleArray(selectedQuestions);
+                setTimeout(() => updateProgress(5), 2000); // 完成题目生成
+                return selectedQuestions;
+            } catch (error) {
+                console.error('生成题目错误:', error);
+                showErrorMessage('生成题目失败，请重试');
+                throw error;
+            } finally {
+                setTimeout(() => toggleLoading(false), 2500);
+            }
+        }
+
+        // 渲染题目
+        function renderQuestions(questions) {
+            const quizContainer = document.createElement('div');
+            quizContainer.className = 'quiz-container';
+
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+
+                if (q.type === 'judgement') {
+                    questionDiv.innerHTML = `
+                        <div class="question-type">判断题</div>
+                        <div>${index + 1}. ${q.question}</div>
+                        <div class="options">
+                            <div class="option-item">
+                                <input type="radio" name="q${index}" value="true" id="q${index}_true">
+                                <label for="q${index}_true">正确</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" name="q${index}" value="false" id="q${index}_false">
+                                <label for="q${index}_false">错误</label>
+                            </div>
+                        </div>
+                    `;
+                } else if (q.type === 'choice') {
+                    questionDiv.innerHTML = `
+                        <div class="question-type">选择题</div>
+                        <div>${index + 1}. ${q.question}</div>
+                        <div class="options">
+                            ${q.options.map((opt, i) => `
+                                <div class="option-item">
+                                    <input type="radio" name="q${index}" value="${i}" id="q${index}_${i}">
+                                    <label for="q${index}_${i}">${opt}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                quizContainer.appendChild(questionDiv);
+            });
+
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'submit-btn';
+            submitBtn.textContent = '提交答案';
+            submitBtn.onclick = () => checkAnswers(questions);
+            quizContainer.appendChild(submitBtn);
+
+            return quizContainer;
+        }
+
+        // 检查答案
+        function checkAnswers(questions) {
+            // 移除已存在的操作按钮和结果显示
+            const existingActionButtons = document.querySelector('.action-buttons');
+            if (existingActionButtons) {
+                existingActionButtons.remove();
+            }
+            document.querySelectorAll('.result').forEach(result => result.remove());
+
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selectedAnswer = document.querySelector(`input[name="q${index}"]:checked`);
+                if (!selectedAnswer) return;
+
+                const questionDiv = document.querySelectorAll('.question')[index];
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result';
+
+                if (q.type === 'judgement') {
+                    const userAnswer = selectedAnswer.value === 'true';
+                    const isCorrect = userAnswer === q.answer;
+                    resultDiv.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    resultDiv.innerHTML = `
+                        <div>你的答案：${userAnswer ? '正确' : '错误'}</div>
+                        <div>正确答案：${q.answer ? '正确' : '错误'}</div>
+                        ${isCorrect ? '<div>✓ 答对了！</div>' : '<div>✗ 答错了！</div>'}
+                    `;
+                } else if (q.type === 'choice') {
+                    const userAnswer = parseInt(selectedAnswer.value);
+                    const isCorrect = userAnswer === q.answer;
+                    resultDiv.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    resultDiv.innerHTML = `
+                        <div>你的答案：${q.options[userAnswer]}</div>
+                        <div>正确答案：${q.options[q.answer]}</div>
+                        ${isCorrect ? '<div>✓ 答对了！</div>' : '<div>✗ 答错了！</div>'}
+                    `;
+                }
+
+                questionDiv.appendChild(resultDiv);
+                if (selectedAnswer.value === String(q.answer) || 
+                    (q.type === 'judgement' && selectedAnswer.value === String(q.answer))) {
+                    score++;
+                }
+            });
+
+            // 添加总分显示
+            const scoreDiv = document.createElement('div');
+            scoreDiv.className = 'score-display';
+            scoreDiv.style.cssText = `
+                text-align: center;
+                font-size: 1.2rem;
+                margin: 2rem 0;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 0.5rem;
+                color: var(--primary);
+            `;
+            scoreDiv.textContent = `总分：${score}/${questions.length} 分`;
+            document.querySelector('.quiz-container').appendChild(scoreDiv);
+
+            // 添加操作按钮
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'action-buttons';
+
+            const retryBtn = document.createElement('button');
+            retryBtn.className = 'retry-btn';
+            retryBtn.textContent = '再次生成题目';
+            retryBtn.onclick = async () => {
+                const selected = Array.from(options)
+                    .filter(option => option.checked)
+                    .map(option => option.value);
+
+                try {
+                    const questions = await generateQuestions(selected);
+                    const quizContainer = renderQuestions(questions);
+                    
+                    const oldQuizContainer = document.querySelector('.quiz-container');
+                    if (oldQuizContainer) {
+                        oldQuizContainer.remove();
+                    }
+                    
+                    document.querySelector('.assessment-container').appendChild(quizContainer);
+                    quizContainer.style.display = 'block';
+                } catch (error) {
+                    console.error('重新生成题目失败:', error);
+                    showErrorMessage('重新生成题目失败，请重试');
+                }
+            };
+
+            const backBtn = document.createElement('button');
+            backBtn.className = 'back-btn';
+            backBtn.textContent = '返回重新选择';
+            backBtn.onclick = () => {
+                const quizContainer = document.querySelector('.quiz-container');
+                if (quizContainer) {
+                    quizContainer.remove();
+                }
+                
+                document.querySelector('.topic-selector').style.display = 'block';
+                document.querySelector('.confirm-btn').style.display = 'block';
+                document.querySelector('.confirm-btn').disabled = false;
+                document.querySelector('.confirm-btn').textContent = '开始测评';
+                
+                // 清空选择
+                options.forEach(option => option.checked = false);
+                updateSelectedTopics();
+            };
+
+            actionButtons.appendChild(retryBtn);
+            actionButtons.appendChild(backBtn);
+            document.querySelector('.quiz-container').appendChild(actionButtons);
+        }
+
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #f8d7da;
+                color: #721c24;
+                padding: 1rem 2rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                z-index: 1000;
+                text-align: center;
+            `;
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
